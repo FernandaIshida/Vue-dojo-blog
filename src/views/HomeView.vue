@@ -1,36 +1,28 @@
 <template>
   <div class="home">
    <h1>Home</h1>
-   <h2>Refs</h2>
-   <p>{{ ninjaOne.name }} - {{ ninjaOne.age }}</p>
-   <button @click="updateNinjaOne">Update ninja one</button>
-   <h2>Reactive</h2>
-   <p>{{ ninjaTwo.name }} - {{ ninjaTwo.age }}</p>
-   <button @click="updateNinjaTwo">Update ninja two</button>
+   <input type="text" v-model="search">
+   <p>Search term - {{ search }}</p>
+   <div v-for="name in matchingNames" :key="name">{{ name }}</div>
+   
   </div>
 </template>
 
 <script>
-import { ref, reactive } from 'vue'
-// Refs benefits:
-// - can use with primitive values
-// - best for creating composition functions - retain reactivity when exposed to external functions
+import { computed, ref } from 'vue'
+
 export default {
   name: 'HomeView',
   setup() {
+    const search = ref('')
+    const names = ref(['mario', 'yoshi', 'luigi', 'toad', 'bowser', 'koopa', 'peach'])
 
-    const ninjaOne = ref({name: 'mario', age: 30})
-    const ninjaTwo = reactive({name: 'luigi', age: 35})
-
-    const updateNinjaOne = () => {
-      ninjaOne.value.age = 40
-    }
-
-    const updateNinjaTwo = () => {
-      ninjaTwo.age = 45
-    }
-
-    return { ninjaOne, updateNinjaOne, ninjaTwo, updateNinjaTwo }
+    // This computed property returns updated value based on other values (in this case, const names array)
+    const matchingNames = computed(() => {
+      return names.value.filter((name) => name.includes(search.value))
+    })
+    
+    return { names, search, matchingNames }
 
   }
 }
