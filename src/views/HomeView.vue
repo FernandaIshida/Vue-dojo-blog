@@ -4,6 +4,7 @@
    <input type="text" v-model="search">
    <p>Search term - {{ search }}</p>
    <div v-for="name in matchingNames" :key="name">{{ name }}</div>
+   <button @click="handleClick">stop watching</button>
    
   </div>
 </template>
@@ -19,13 +20,13 @@ export default {
 
     //This function doesn't run initialy when the componet first runs
     //If you dont use a value inside the function this the best option
-    watch(search, () => {
+    const stopWatch = watch(search, () => {
       console.log('watch function ran')
     })
 
     //This function runs initialy when the componet first runs
     //Use this function if you want to use a value inside the function
-    watchEffect(() => {
+    const stopEffect = watchEffect(() => {
       console.log('watchEffectt function ran', search.value)  
     })
 
@@ -33,8 +34,13 @@ export default {
     const matchingNames = computed(() => {
       return names.value.filter((name) => name.includes(search.value))
     })
+
+    const handleClick = () => {
+      stopWatch()
+      stopEffect()
+    }
     
-    return { names, search, matchingNames }
+    return { names, search, matchingNames, handleClick }
 
   }
 }
